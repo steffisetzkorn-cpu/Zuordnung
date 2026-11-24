@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Proportional-Check – Klasse 7</title>
+<style>
+:root{font-family:system-ui,sans-serif;color:#172033;background:#f3f6fb}
+body{margin:0;padding:1rem}.wrap{max-width:760px;margin:auto}.card{background:white;border-radius:16px;padding:1.2rem;margin:1rem 0;box-shadow:0 3px 14px #0001}
+h1{font-size:1.6rem}.tag{color:#435a78}.big{font-size:1.2rem;font-weight:650}
+input{font-size:1.1rem;padding:.7rem;width:9rem;border:1px solid #9aa9bd;border-radius:8px}
+button{font-size:1rem;padding:.7rem 1rem;border:0;border-radius:9px;background:#174f85;color:white;margin:.3rem;cursor:pointer}
+button.secondary{background:#e6edf5;color:#172033}.feedback{min-height:2rem;font-weight:650}.good{color:#087443}.bad{color:#a12a2a}
+</style></head><body><main class="wrap">
+<h1>Proportional-Check</h1><p class="tag">Mathematik Klasse 7 · Selbstlernübung · offline nutzbar</p>
+<section class="card"><p id="progress">Aufgabe 1 von 6</p><div class="big" id="question"></div><p id="hint" hidden></p>
+<label for="answer">Deine Antwort:</label><br><input id="answer" inputmode="decimal" autocomplete="off">
+<button id="check">Prüfen</button><button class="secondary" id="showHint">Hinweis</button><button class="secondary" id="solution">Lösung anzeigen</button>
+<p class="feedback" id="feedback" aria-live="polite"></p><button id="next" hidden>Weiter</button></section>
+<section class="card"><b>Lernstand</b><p id="score">0 richtig beantwortet</p><p>Merke: Bei proportionalen Zuordnungen ist y : x konstant. Der konstante Quotient heißt Proportionalitätsfaktor k.</p></section>
+</main>
+<script>
+const tasks=[
+{q:"2 kg kosten 6 €. Wie viel kosten 5 kg? (in €)",a:15,h:"Berechne zuerst den Preis für 1 kg.",s:"6 : 2 = 3 €/kg; 3 · 5 = 15 €."},
+{q:"Bei einer proportionalen Zuordnung gilt y=4·x. Berechne y für x=3.",a:12,h:"Setze x=3 ein.",s:"y=4·3=12."},
+{q:"Tabelle: x=2, y=10. Wie groß ist k=y:x?",a:5,h:"Teile den y-Wert durch den x-Wert.",s:"k=10:2=5."},
+{q:"3 Hefte kosten 4,50 €. Wie viel kosten 8 Hefte? (in €)",a:12,h:"Erst den Preis eines Heftes bestimmen.",s:"4,50:3=1,50; 1,50·8=12 €."},
+{q:"Ist die Tabelle x: 1,2,3 und y: 3,6,9 proportional? Antworte 1 für ja, 0 für nein.",a:1,h:"Vergleiche y:x bei allen Wertepaaren.",s:"3:1=6:2=9:3=3. Ja, daher 1."},
+{q:"Eine Zuordnung hat k=2,5. Berechne y für x=4.",a:10,h:"Nutze y=k·x.",s:"y=2,5·4=10."}
+];
+let i=0,score=0,done=false;
+const $=id=>document.getElementById(id);
+function render(){done=false;$("progress").textContent=`Aufgabe ${i+1} von ${tasks.length}`;$("question").textContent=tasks[i].q;$("answer").value="";$("feedback").textContent="";$("feedback").className="feedback";$("hint").hidden=true;$("next").hidden=true;$("answer").disabled=false;$("check").disabled=false;}
+function num(v){return Number(String(v).replace(",","."));}
+$("check").onclick=()=>{if(done)return;const ok=Number.isFinite(num($("answer").value))&&Math.abs(num($("answer").value)-tasks[i].a)<0.0001;if(ok){score++;$("feedback").textContent="Richtig! Gut gerechnet.";$("feedback").className="feedback good";}else{$("feedback").textContent="Noch nicht richtig. Nutze den Hinweis oder prüfe deinen Rechenweg.";$("feedback").className="feedback bad";}done=true;$("score").textContent=`${score} von ${i+1} Aufgaben richtig beantwortet`;$("next").hidden=false;$("answer").disabled=true;$("check").disabled=true;};
+$("showHint").onclick=()=>{$("hint").textContent="Hinweis: "+tasks[i].h;$("hint").hidden=false;};
+$("solution").onclick=()=>{$("feedback").textContent="Lösung: "+tasks[i].s;$("feedback").className="feedback";};
+$("next").onclick=()=>{i++;if(i===tasks.length){$("question").textContent=`Fertig! Du hast ${score} von ${tasks.length} Aufgaben beim ersten Prüfen richtig gelöst.`;$("progress").textContent="Übung abgeschlossen";$("answer").hidden=true;$("check").hidden=true;$("showHint").hidden=true;$("solution").hidden=true;$("next").hidden=true;}else render();};
+render();
+</script></body></html>
